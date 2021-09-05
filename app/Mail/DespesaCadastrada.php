@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NovaDespesa extends Mailable
+class DespesaCadastrada extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,11 +31,9 @@ class NovaDespesa extends Mailable
      */
     public function build()
     {
-        /*return $this->view('emails.emaildespesa')->with([
+        return $this->view('emails.emaildespesa')->with([
             'nome'=>$this->user->name
-        ]);*/
-
-        return $this->view('home');
+        ]);
 
     }
 }

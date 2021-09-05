@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\NovaDespesa;
+use App\Events\EventEmailDespesa;
+use App\Mail\DespesaCadastrada;
 use App\Models\Despesa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -80,11 +81,11 @@ class DespesaController extends Controller
             $despesa->Save();
 
             $user = User::find($request->input('usuario_id'));
-            Mail::to($user)->send(new NovaDespesa($user));
+            //Mail::to($user)->send(new DespesaCadastrada($user));
+
+            event(new EventEmailDespesa($user));
 
             return json_encode(['status'=>200, 'record'=>$despesa]);
-
-
 
         } catch (Exception $e) {
 
