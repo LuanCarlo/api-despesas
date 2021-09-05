@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NovaDespesa;
 use App\Models\Despesa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 
 
@@ -76,7 +78,13 @@ class DespesaController extends Controller
             $despesa->data_despesa = $request->input('data_despesa');
             $despesa->valor = $request->input('valor');
             $despesa->Save();
+
+            $user = User::find($request->input('usuario_id'));
+            Mail::to($user)->send(new NovaDespesa($user));
+
             return json_encode(['status'=>200, 'record'=>$despesa]);
+
+
 
         } catch (Exception $e) {
 
