@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Validator;
+
 
 class AuthController extends Controller
 {
@@ -14,27 +16,36 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-
+    /**
+     * Create a new user.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request) {
 
-        $request->validate([
+
+        $validation = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string'
         ]);
+
+        if ($validation->fails())
+        {
+            return json_encode(['status'=>-100, 'msg'=>$validation->errors()]);
+        }
 
         $user = new User([
-            'name'=> $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'remember_token' => str_random(60)
+            'name'=> $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'remember_token' => ''
         ]);
-        $user->save();
 
-        event(new EventNovoRegistro($user));
+        $user->save();
 
         return response()->json([
             'res'=>'Usuario criado com sucesso'

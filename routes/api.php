@@ -19,6 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
+
 
 Route::group(
     [
@@ -35,7 +37,6 @@ Route::group(
     Route::get('/apagar/{id}', [\App\Http\Controllers\DespesaController::class, 'destroy']);
 
 });
-//Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
 
 
 
