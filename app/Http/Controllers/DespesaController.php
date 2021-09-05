@@ -17,7 +17,7 @@ class DespesaController extends Controller
         'usuario_id' => 'required|integer',
         'descricao' => 'required|string|max:191',
         'data_despesa'=>'date|before:tomorrow',
-        'valor' => 'required'
+        'valor' => 'required|numeric'
     ];
 
     /**
@@ -73,6 +73,9 @@ class DespesaController extends Controller
         }
         try {
 
+            if ($request->input('valor') < 0) {
+                return json_encode(['status'=>-100, 'msg'=>"Valor não pode ser negativo"]);
+            }
             $despesa = new Despesa();
             $despesa->usuario_id = $request->input('usuario_id');
             $despesa->descricao = $request->input('descricao');
@@ -140,7 +143,9 @@ class DespesaController extends Controller
             $despesa = Despesa::find($id);
 
             if (isset($despesa)) {
-
+                if ($request->input('valor') < 0) {
+                    return json_encode(['status'=>-100, 'msg'=>"Valor não pode ser negativo"]);
+                }
                 $despesa->usuario_id = $request->input('usuario_id');
                 $despesa->descricao = $request->input('descricao');
                 $despesa->data_despesa = $request->input('data_despesa');
